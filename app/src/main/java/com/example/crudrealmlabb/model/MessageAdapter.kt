@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.crudrealmlabb.R
 import io.realm.OrderedRealmCollection
 import io.realm.RealmRecyclerViewAdapter
-import org.w3c.dom.Text
 
 class MessageAdapter(data: OrderedRealmCollection<Message>) : RealmRecyclerViewAdapter<Message, MessageAdapter.MessageViewHolder?>(data, true) {
 

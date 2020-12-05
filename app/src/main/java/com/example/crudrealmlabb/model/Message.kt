@@ -4,8 +4,6 @@ import io.realm.RealmObject
 import io.realm.annotations.Required
 
 open class Message (
-    @Required
-    var title: String,
-    @Required
-    var body: String,
+    var title: String = "",
+    var body: String = ""
 ): RealmObject()
