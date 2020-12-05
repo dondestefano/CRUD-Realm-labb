@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         getMessages()
         initRecycleView()
+        initButton()
     }
 
     private fun getMessages() {
