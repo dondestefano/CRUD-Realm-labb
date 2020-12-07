@@ -9,7 +9,7 @@ import androidx.lifecycle.Observer
 import com.example.crudrealmlabb.model.Message
 
 class CreateActivity : AppCompatActivity() {
-    val messageViewModel: MessageViewModel by viewModels()
+    private val messageViewModel: MessageViewModel by viewModels()
 
     private lateinit var titleEditText: EditText
     private lateinit var bodyEditText: EditText
@@ -32,7 +32,7 @@ class CreateActivity : AppCompatActivity() {
         observeViewModel()
     }
 
-    fun observeViewModel() {
+    private fun observeViewModel() {
         messageViewModel.state.observe(this, Observer {
             when (it) {
                 State.IDLE -> {

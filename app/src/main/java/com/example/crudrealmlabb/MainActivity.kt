@@ -39,8 +39,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRecycleView() {
-        val adapter = MessageAdapter(messages)
         messageRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        val adapter = MessageAdapter(messages)
+        adapter.onDeleteListener = {onDelete(it)}
         messageRecyclerView.adapter = adapter
     }
 
@@ -48,6 +50,14 @@ class MainActivity : AppCompatActivity() {
         createButton.setOnClickListener{
             val intent = Intent(this, CreateActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun onDelete(message: Message?) {
+        realm.executeTransaction {
+            message?.let {
+                message.deleteFromRealm()
+            }
         }
     }
 
