@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = MessageAdapter(messages)
         adapter.onDeleteListener = {onDelete(it)}
+        adapter.onEditListener = { onEdit(it) }
         messageRecyclerView.adapter = adapter
     }
 
@@ -58,6 +59,16 @@ class MainActivity : AppCompatActivity() {
             message?.let {
                 message.deleteFromRealm()
             }
+        }
+    }
+
+    private fun onEdit(message: Message?) {
+        message.let {
+            val intent = Intent(this, CreateActivity::class.java)
+            intent.putExtra("editId", message?.id)
+            intent.putExtra("editTitle", message?.title)
+            intent.putExtra("editBody", message?.body)
+            startActivity(intent)
         }
     }
 

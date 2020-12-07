@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.message_view.view.*
 class MessageAdapter(data: OrderedRealmCollection<Message>) : RealmRecyclerViewAdapter<Message, MessageAdapter.MessageViewHolder?>(data, true) {
 
     var onDeleteListener: (Message?) -> Unit = {}
+    var onEditListener: (Message?) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val messageView: View = LayoutInflater.from(parent.context).inflate(R.layout.message_view, parent, false)
@@ -37,7 +38,8 @@ class MessageAdapter(data: OrderedRealmCollection<Message>) : RealmRecyclerViewA
             titleTextView.text = obj.title
             bodyTextView.text = obj.body
 
-            deleteButton.setOnClickListener { onDeleteListener(data?.get(adapterPosition))  }
+            deleteButton.setOnClickListener { onDeleteListener(obj) }
+            bodyTextView.setOnClickListener { onEditListener(obj) }
         }
     }
 }
