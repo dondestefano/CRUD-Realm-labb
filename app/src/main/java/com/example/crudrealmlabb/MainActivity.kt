@@ -13,9 +13,6 @@ import io.realm.Realm
 import io.realm.kotlin.where
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var realm: Realm
-    private lateinit var messages: OrderedRealmCollection<Message>
-
     private lateinit var messageRecyclerView: RecyclerView
     private lateinit var createButton: FloatingActionButton
 
@@ -24,24 +21,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        realm = Realm.getDefaultInstance()
+        RealmManager.startDefaultRealm()
 
         messageRecyclerView = findViewById(R.id.messageRecyclerView)
         createButton = findViewById(R.id.newMessageButton)
 
-        getMessages()
+        RealmManager.searchForMessages()
         initRecycleView()
         initButton()
-    }
-
-    private fun getMessages() {
-        messages = realm.where<Message>().findAllAsync()
     }
 
     private fun initRecycleView() {
         messageRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        val adapter = MessageAdapter(messages)
+        val adapter = MessageAdapter(RealmManager.getMessages())
         adapter.onDeleteListener = {onDelete(it)}
         adapter.onEditListener = { onEdit(it) }
         messageRecyclerView.adapter = adapter
@@ -55,10 +48,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onDelete(message: Message?) {
-        realm.executeTransaction {
-            message?.let {
-                message.deleteFromRealm()
-            }
+        if (message != null) {
+            RealmManager.deleteMessage(message)
         }
     }
 
@@ -74,6 +65,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        realm.close()
+        RealmManager.closeRealm()
     }
 }

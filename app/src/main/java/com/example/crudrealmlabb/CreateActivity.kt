@@ -41,26 +41,10 @@ class CreateActivity : AppCompatActivity() {
         messageViewModel.state.observe(this, Observer {
             when (it) {
                 State.CREATE -> {
-                    title.text = "Input new message"
-                    submitButton.text = "Submit"
-
-                    submitButton.setOnClickListener {
-                        submitMessage()
-                    }
+                    setupCreate()
                 }
                 State.EDIT -> {
-                    title.text = "Edit message"
-                    submitButton.text = "Save"
-
-                    titleEditText.setText(intent.getStringExtra("editTitle"))
-                    bodyEditText.setText(intent.getStringExtra("editBody"))
-
-                    submitButton.setOnClickListener {
-                        messageViewModel.updateMessage(
-                                messageId!!,
-                                titleEditText.text.toString(),
-                                bodyEditText.text.toString())
-                    }
+                    setupEdit()
                 }
                 State.SENT -> {
                     finish()
@@ -76,13 +60,35 @@ class CreateActivity : AppCompatActivity() {
         messageId = intent.getStringExtra("editId")
     }
 
-    private fun submitMessage() {
-        val newMessage = Message(titleEditText.text.toString(), bodyEditText.text.toString())
-        messageViewModel.createMessage(newMessage)
+    private fun setupEdit() {
+        title.text = "Edit message"
+        submitButton.text = "Save"
+
+        titleEditText.setText(intent.getStringExtra("editTitle"))
+        bodyEditText.setText(intent.getStringExtra("editBody"))
+
+        submitButton.setOnClickListener {
+            saveMessage()
+        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        messageViewModel.onBackPressed()
+    private fun setupCreate() {
+        title.text = "Input new message"
+        submitButton.text = "Submit"
+
+        submitButton.setOnClickListener {
+            submitMessage()
+        }
+    }
+
+    private fun submitMessage() {
+        messageViewModel.message = Message(titleEditText.text.toString(), bodyEditText.text.toString())
+        messageViewModel.createMessage()
+    }
+
+    private fun saveMessage() {
+        messageViewModel.message = Message(titleEditText.text.toString(), bodyEditText.text.toString())
+        messageViewModel.message!!.id = messageId
+        messageViewModel.updateMessage()
     }
 }

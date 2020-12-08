@@ -18,17 +18,14 @@ enum class State {
 }
 
 class MessageViewModel: ViewModel() {
-
     var state = MutableLiveData<State>()
-    var messageToEdit : Message? = null
-    private val realm = Realm.getDefaultInstance()
+    var message : Message? = null
 
-    fun createMessage(message: Message) {
+    fun createMessage() {
         try {
-            realm.executeTransaction {
-                realm.copyToRealm(message)
-            }
-        } catch(e: Error) {
+            message?.let { RealmManager.createMessage(it) }
+        }
+        catch(e: Error) {
             state.value = State.FAILED
         }
         finally {
@@ -36,14 +33,11 @@ class MessageViewModel: ViewModel() {
         }
     }
 
-    fun updateMessage(messageId: String, newTitle: String, newBody: String) {
+    fun updateMessage() {
         try {
-            realm.executeTransaction {
-                messageToEdit = realm.where<Message>().equalTo("id", messageId).findFirst()
-                messageToEdit?.title = newTitle
-                messageToEdit?.body = newBody
-            }
-        } catch(e: Error) {
+            message?.let { RealmManager.updateMessage(it) }
+        }
+        catch(e: Error) {
             state.value = State.FAILED
         }
         finally {
@@ -57,9 +51,5 @@ class MessageViewModel: ViewModel() {
         } else {
             state.value = State.CREATE
         }
-    }
-
-    fun onBackPressed() {
-        realm.close()
     }
 }
