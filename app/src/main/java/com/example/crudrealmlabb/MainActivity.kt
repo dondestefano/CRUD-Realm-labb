@@ -3,18 +3,18 @@ package com.example.crudrealmlabb
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.crudrealmlabb.model.Message
 import com.example.crudrealmlabb.model.MessageAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import io.realm.OrderedRealmCollection
-import io.realm.Realm
-import io.realm.kotlin.where
 
 class MainActivity : AppCompatActivity() {
     private lateinit var messageRecyclerView: RecyclerView
     private lateinit var createButton: FloatingActionButton
+
+    private val mainViewModel: MainViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,8 +63,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateCache() {
+        mainViewModel.clearCache()
+        mainViewModel.saveToCache(RealmManager.getMessages())
+    }
+
+    override fun onResume() {
+        super.onResume()
+/*        mainViewModel.startCacheDb(this)*/
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+/*        updateCache()*/
         RealmManager.closeRealm()
     }
 }

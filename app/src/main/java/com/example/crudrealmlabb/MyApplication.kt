@@ -7,6 +7,7 @@ import io.realm.RealmConfiguration
 class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+
         Realm.init(this)
         val config = RealmConfiguration.Builder().schemaVersion(3).migration(RealmMigrations()).allowWritesOnUiThread(true).name("crudapp.realm").build()
         Realm.setDefaultConfiguration(config)
